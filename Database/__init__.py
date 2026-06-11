@@ -46,6 +46,48 @@ class Database:
 
             return itens
 
+    
+
+    def consultar_produto_codigo(self, codigo):
+        with self.conn() as conn:
+            cur = conn.cursor()
+            cur.execute("SELECT * FROM estoque WHERE codigo = ?", (codigo, )) 
+            produto = cur.fetchone()
+            
+            if not produto:
+                return None
+
+            return dict(produto)
+
+
+    def remover_produto(self, codigo) -> str:
+        res = self.consultar_produto_codigo(codigo)
+
+        if not res:
+            return "Produto não encontrado no banco de dados!"
+        
+        with self.conn() as conn:
+            cur = conn.cursor()
+            cur.execute("DELETE FROM estoque WHERE codigo = ?", (codigo, ))
+
+            conn.commit()
+            return "Produto removido com sucesso!"
+
+    
+    def atualizar_produto(self, codigo, values):
+        res = self.consultar_produto_codigo(codigo)
+        
+        if not res:
+            return "Produto não encontrado no banco de dados!"
+
+        with self.conn() as conn:
+            cur = conn.cursor()
+            cur.execute("UPDATE estoque set produto = ?, modelo = ?, quantidade = ? " \
+            "WHERE codigo = ?", (values))
+
+            conn.commit()
+            return "Produto removido com sucesso!"
+
 
 database : Database = Database()
 

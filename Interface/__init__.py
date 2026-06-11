@@ -35,8 +35,8 @@ class App(CTk):
     def configuração(self):
         self.overrideredirect(False)
         self.title("Aços União")
-        janela_A = 1200
-        janela_L = 1500
+        janela_A = 768
+        janela_L = 1366
         tela_A = (self.winfo_screenheight() // 2) - (janela_A // 2)
         tele_L = (self.winfo_screenwidth() // 2) - (janela_L // 2)
         self.geometry(f"{janela_L}x{janela_A}+{tele_L}+{tela_A}")

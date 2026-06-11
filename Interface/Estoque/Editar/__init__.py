@@ -1,13 +1,15 @@
-from customtkinter import CTkToplevel, CTkButton, CTkLabel, CTkEntry, IntVar
+from customtkinter import CTkToplevel, CTkButton, CTkLabel, CTkEntry, IntVar, StringVar
 from tkinter import messagebox as msg
 from Database import database
 from pyautogui import press
 
 
 
-class Adicionar(CTkToplevel):
-    def __init__(self, master):
+class Editar(CTkToplevel):
+    def __init__(self, master, values):
         self.master = master
+        self.values = values
+        self.codigo = self.values[0]
         super().__init__(master, fg_color="#aaaaaa")
         self.config()
         self.layout()
@@ -15,7 +17,7 @@ class Adicionar(CTkToplevel):
 
 
     def config(self):
-        self.title("Cadastro de Produto")
+        self.title("Editar Produto")
         self.grab_set()
         largura_janela = 400
         altura_janela = 300
@@ -31,17 +33,22 @@ class Adicionar(CTkToplevel):
 
     def layout(self):
         nome_produto_L : CTkLabel = CTkLabel(self, text="Nome do produto")
-        nome_produto_E : CTkEntry = CTkEntry(self, font=("Itim", 13))
+        nome_prduto : StringVar = StringVar() 
+        nome_prduto.set(self.values[1])
+        nome_produto_E : CTkEntry = CTkEntry(self, font=("Itim", 13), textvariable=nome_prduto)
 
         nome_produto_E.bind("<Escape>", lambda e: self.fechar(e))
         nome_produto_E.bind("<Return>", lambda e: self.tab(e))
 
         modelo_produto_L : CTkLabel = CTkLabel(self, text="Modelo do produto")
-        modelo_produto_E : CTkEntry = CTkEntry(self, font=("itim", 13))
+        modelo_produto : StringVar = StringVar()
+        modelo_produto.set(self.values[2])
+        modelo_produto_E : CTkEntry = CTkEntry(self, font=("itim", 13), textvariable=modelo_produto)
         modelo_produto_E.bind("<Escape>", lambda e: self.fechar(e))
 
         
         quantidade = IntVar()
+        quantidade.set(self.values[-1])
         quantidade_estoque_L : CTkLabel = CTkLabel(self, text="Quantidade em estoque")
         quantidade_estoque_E : CTkEntry = CTkEntry(self, font=("itim", 13), textvariable=quantidade)
         quantidade_estoque_E.bind("<Escape>", lambda e: self.fechar(e))
@@ -83,10 +90,10 @@ class Adicionar(CTkToplevel):
         
 
 
-        values : tuple = (produto, modelo, quantidade)
+        values : tuple = (produto, modelo, quantidade, self.codigo)
 
-        database.inserir_porduto(values)
+        database.atualizar_produto(self.codigo, values)
         self.destroy()
-        msg.showinfo("Concluído", "Produto cadastrado!", parent=self.master)
+        msg.showinfo("Concluído", "Produto atualizado!", parent=self.master)
         self.master.grab_set()
         self.master.atualizar_tabela()
