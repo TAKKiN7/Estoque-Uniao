@@ -35,6 +35,7 @@ class App(CTk):
     def configuração(self):
         self.overrideredirect(False)
         self.title("Aços União")
+        self.iconbitmap("Imagens/01.ico")
         janela_A = 768
         janela_L = 1366
         tela_A = (self.winfo_screenheight() // 2) - (janela_A // 2)

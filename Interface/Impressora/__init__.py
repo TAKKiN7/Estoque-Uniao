@@ -1,16 +1,14 @@
 from customtkinter import CTkToplevel, CTkButton
-from tkinter.ttk import Treeview, Style
+from tkinter.ttk import Treeview
 from Database.estoque import database
 from Interface.Estoque.Adicionar import Adicionar
 from Interface.Estoque.Editar import Editar
-from Interface.Estoque.Saida import Saida
-from Interface.Estoque.Entrada import Entrada
 from tkinter import messagebox as msg
 from Login.usuario import user_autoridade
 
 
 
-class Estoque(CTkToplevel):
+class Impressora(CTkToplevel):
     def __init__(self, master):
         self.permissao = user_autoridade.autoridade
         print(self.permissao)
@@ -21,7 +19,7 @@ class Estoque(CTkToplevel):
 
 
     def config(self):
-        self.title("Estoque")
+        self.title("Impressoras")
         self.grab_set()
         self.after(200,lambda: self.iconbitmap("Imagens/01.ico"))
         largura_janela = 900
@@ -49,46 +47,13 @@ class Estoque(CTkToplevel):
         editar_B : CTkButton = CTkButton(self, text="Editar", corner_radius=0, command=self.editar)
         remover_B : CTkButton = CTkButton(self, text="Remover", corner_radius=0, command=self.remover)
         adicionar_B : CTkButton = CTkButton(self, text="Adicionar", corner_radius=0, command=self.adicionar)
-        entrada_B : CTkButton = CTkButton(self, text="Entrada", corner_radius=0, command=self.entrada)
 
         editar_B.place(relx=.35, relwidth=.1, rely=.955, relheight=.04)
         remover_B.place(relx=.2, relwidth=.1, rely=.955, relheight=.04)
         adicionar_B.place(relx=.05, relwidth=.1, rely=.955, relheight=.04)
-        entrada_B.place(relx=.7, relwidth=.1, rely=.955, relheight=.04)
 
 
-    def menu(self):
-        saida_B : CTkButton = CTkButton(self, text="Saída", corner_radius=0, command=self.saida)
-        saida_B.place(relx=.85, relwidth=.1, rely=.955, relheight=.04)
-        
-
-
-    
-    def saida(self):
-        item = self.tabela.selection()
-        if not item:
-            msg.showerror("Falha", "Nenhum produto selecionado!", parent=self)
-            return
-        produto = self.tabela.item(item)["values"][1]
-        
-        values = self.tabela.item(item)["values"]
-        Saida(self, values)
-
-        print(f"Registro realizado: {produto} alterado no estoque")
-
-    
-    def entrada(self):
-        item = self.tabela.selection()
-        if not item:
-            msg.showerror("Falha", "Nenhum produto selecionado!", parent=self)
-            return
-        produto = self.tabela.item(item)["values"][1]
-        
-        values = self.tabela.item(item)["values"]
-        Entrada(self, values)
-
-        print(f"Registro realizado: {produto} alterado no estoque")
-
+ 
     def adicionar(self):
         Adicionar(self)
     
@@ -149,19 +114,18 @@ class Estoque(CTkToplevel):
 class Tabela(Treeview):
     def __init__(self, master):
         super().__init__(master, show="headings")
-        self.style = Style()
         self.config()
         self.layout()
         
     def config(self):
-        self["columns"] = ("codigo", "item", "estoque")
+        self["columns"] = ("codigo", "produto", "modelo", "quantidade")
 
-        self.column("codigo", width=70, stretch=False)
-        self.column("estoque", width=90,stretch=False, anchor="center")
+        self.column("codigo", width=10)
 
         self.heading("codigo", text="Código")
-        self.heading("item", text="Item")
-        self.heading("estoque", text="Estoque")
+        self.heading("produto", text="Produto")
+        self.heading("modelo", text="Modelo")
+        self.heading("quantidade", text="Quantidade")
 
 
         self.tag_configure(
@@ -179,28 +143,16 @@ class Tabela(Treeview):
             foreground="RED"
         )
 
-
-        self.style.configure(
-            "Treeview",
-            font=("Arial", 11),
-            rowheight=25
-        )
-
-        self.style.configure(
-            "Treeview.Heading",
-            font=("Arial", 13, "bold") 
-        )
-
     def layout(self):
         self.inserir_registros()
 
 
     def inserir_registros(self):
         registros : list = database.listar_produtos()
-        for index, registro in enumerate(registros):
-            valores : tuple = (registro[0], registro[1].upper(), registro[2])
+        for index, resgistro in enumerate(registros):
+            valores : tuple = (resgistro.get("codigo"), resgistro.get("produto").title(), resgistro.get("modelo"), resgistro.get("quantidade"))
             
-            estoque = int(registro[-1])
+            estoque = int(resgistro.get("quantidade"))
 
             if index % 2 != 0:
                 if estoque < 10:

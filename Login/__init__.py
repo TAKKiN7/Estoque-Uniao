@@ -20,8 +20,9 @@ class Login(CTk):
     
     def config(self):
         self.title("Aços União")
+        self.iconbitmap("Imagens/01.ico")
         largura_janela = 400
-        altura_janela = 200
+        altura_janela = 250
         
         self.minsize(largura_janela,altura_janela)
         self.maxsize(largura_janela,altura_janela)
@@ -50,6 +51,7 @@ class Login(CTk):
     def layout(self):
         self.user_E : CTkEntry = CTkEntry(self, placeholder_text="Nome de usuário", corner_radius=0)
         self.user_E.bind("<Return>", lambda e: self.tab(e))
+        self.after(200, lambda: self.user_E.focus_set())
 
         self.pass_E : CTkEntry = CTkEntry(self, placeholder_text="Senha de acesso", corner_radius=0, show="*")
         self.pass_E.bind("<Return>", lambda e: self.entrar(e))
