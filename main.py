@@ -1,4 +1,5 @@
-from Interface import App
+from Login import Login
 
 
-app : App = App()
+
+login : Login = Login()

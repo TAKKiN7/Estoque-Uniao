@@ -1,4 +1,4 @@
-from customtkinter import CTkToplevel, CTkButton, CTkLabel, CTkEntry, IntVar
+from customtkinter import CTkToplevel, CTkButton, CTkLabel, CTkEntry, StringVar
 from tkinter import messagebox as msg
 from Database import database
 from pyautogui import press
@@ -39,12 +39,15 @@ class Adicionar(CTkToplevel):
         modelo_produto_L : CTkLabel = CTkLabel(self, text="Modelo do produto")
         modelo_produto_E : CTkEntry = CTkEntry(self, font=("itim", 13))
         modelo_produto_E.bind("<Escape>", lambda e: self.fechar(e))
+        modelo_produto_E.bind("<Return>", lambda e: self.tab(e))
 
         
-        quantidade = IntVar()
+        quantidade = StringVar()
+        quantidade.set("0")
         quantidade_estoque_L : CTkLabel = CTkLabel(self, text="Quantidade em estoque")
         quantidade_estoque_E : CTkEntry = CTkEntry(self, font=("itim", 13), textvariable=quantidade)
         quantidade_estoque_E.bind("<Escape>", lambda e: self.fechar(e))
+        quantidade_estoque_E.bind("<Return>", lambda e: self.confirmar(nome_produto_E.get(), modelo_produto_E.get(), quantidade_estoque_E.get(), e))
 
         confirmar_B : CTkButton = CTkButton(self, text="OK", font=("Itim", 13, "bold"),
                                             command=lambda: self.confirmar(nome_produto_E.get(), modelo_produto_E.get(), quantidade_estoque_E.get()))
@@ -65,17 +68,22 @@ class Adicionar(CTkToplevel):
 
 
 
+    def tab(self, e):
+        press("tab")
+
     def fechar(self, e=None):
         self.destroy()
 
-    def confirmar(self, produto : str, modelo: str, quantidade : str):
+    def confirmar(self, produto : str, modelo: str, quantidade : str, e=None):
         if not produto:
             msg.showerror("Erro", "Campo *Nome do Produto* é obrigatório!", parent=self.master)
             return
         try:
             qtdd : int = int(quantidade)
+            if qtdd < 0:
+                raise ValueError("Quantidade não pode ser um numeral negativo")
         except:
-            msg.showerror("Campo *Quantidade em estoque* inválido!", self.master)
+            msg.showerror("Falha","Campo *Quantidade em estoque* inválido!", parent=self.master)
             return
         
         if not modelo:
@@ -85,8 +93,8 @@ class Adicionar(CTkToplevel):
 
         values : tuple = (produto, modelo, quantidade)
 
-        database.inserir_porduto(values)
         self.destroy()
+        database.inserir_porduto(values)
         msg.showinfo("Concluído", "Produto cadastrado!", parent=self.master)
         self.master.grab_set()
         self.master.atualizar_tabela()

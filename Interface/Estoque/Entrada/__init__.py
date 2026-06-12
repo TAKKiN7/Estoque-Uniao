@@ -5,7 +5,7 @@ from pyautogui import press
 
 
 
-class Saida(CTkToplevel):
+class Entrada(CTkToplevel):
     def __init__(self, master, values):
         self.master = master
         self.values = values
@@ -17,7 +17,7 @@ class Saida(CTkToplevel):
 
 
     def config(self):
-        self.title("Saída de Material")
+        self.title("Entrada de Material")
         self.grab_set()
         largura_janela = 400
         altura_janela = 300
@@ -49,13 +49,14 @@ class Saida(CTkToplevel):
         
         quantidade = StringVar()
         quantidade.set("0")
-        quantidade_estoque_L : CTkLabel = CTkLabel(self, text="Quantidade de saída")
+        quantidade_estoque_L : CTkLabel = CTkLabel(self, text="Quantidade de entrada")
         quantidade_estoque_E : CTkEntry = CTkEntry(self, font=("itim", 13), textvariable=quantidade)
         quantidade_estoque_E.bind("<Escape>", lambda e: self.fechar(e))
         quantidade_estoque_E.bind("<Return>", lambda e: self.confirmar(nome_produto_E.get(), modelo_produto_E.get(), quantidade_estoque_E.get(), e))
 
         confirmar_B : CTkButton = CTkButton(self, text="OK", font=("Itim", 13, "bold"),
                                             command=lambda: self.confirmar(nome_produto_E.get(), modelo_produto_E.get(), quantidade_estoque_E.get()))
+        
         cancelar_B : CTkButton = CTkButton(self, text="Cancelar", font=("itim", 13, "bold"), command=self.fechar)
 
         nome_produto_L.place(relx=.1, rely=.1)
@@ -83,7 +84,7 @@ class Saida(CTkToplevel):
             if qtdd < 0:
                 raise ValueError("Quantidade não pode ser um numeral negativo")
         except:
-            msg.showerror("Falha","Campo *Quantidade de saida* inválido!", parent=self.master)
+            msg.showerror("Falha","Campo *Quantidade de entrada* inválido!", parent=self.master)
             return
         
         item  = database.consultar_produto_codigo(self.codigo)
@@ -94,7 +95,7 @@ class Saida(CTkToplevel):
         print(type(quantidade_atual))
 
 
-        quantidade_nova : int  = quantidade_atual - qtdd
+        quantidade_nova : int  = quantidade_atual + qtdd
 
         if quantidade_nova < 0:
             msg.showerror("Falha", "Estoque não possuí essa quantidade de materiais disponível", parent=self.master)
@@ -104,7 +105,6 @@ class Saida(CTkToplevel):
 
         self.destroy()
         database.atualizar_produto(self.codigo, values)
-        
         msg.showinfo("Concluído", "Produto atualizado!", parent=self.master)
         self.master.grab_set()
         self.master.atualizar_tabela()

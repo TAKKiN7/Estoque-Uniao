@@ -18,7 +18,7 @@ class Barra_Tarefas(CTkFrame):
 
         pesquisar_E : CTkEntry = CTkEntry(self, placeholder_text="Pesquisar...", corner_radius=0, fg_color="WHITE",
                                           border_color="BLACK", border_width=2)
-        pesquisar_E.place(relx=0.04, rely=0, relwidth=.2, relheight=1)
+        #pesquisar_E.place(relx=0.04, rely=0, relwidth=.2, relheight=1)
 
         hora = time.strftime("%H:%M:%S")
         self.hora_L : CTkLabel = CTkLabel(self, text=hora,corner_radius=0, text_color="WHITE")

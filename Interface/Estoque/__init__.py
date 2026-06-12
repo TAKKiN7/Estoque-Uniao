@@ -4,13 +4,16 @@ from Database import database
 from Interface.Estoque.Adicionar import Adicionar
 from Interface.Estoque.Editar import Editar
 from Interface.Estoque.Saida import Saida
+from Interface.Estoque.Entrada import Entrada
 from tkinter import messagebox as msg
+from Login.usuario import user_autoridade
 
 
 
 class Estoque(CTkToplevel):
     def __init__(self, master):
-        self.permissao = "User"
+        self.permissao = user_autoridade.autoridade
+        print(self.permissao)
         super().__init__(master, fg_color="WHITE")
         self.config()
         self.layout()
@@ -45,27 +48,43 @@ class Estoque(CTkToplevel):
         editar_B : CTkButton = CTkButton(self, text="Editar", corner_radius=0, command=self.editar)
         remover_B : CTkButton = CTkButton(self, text="Remover", corner_radius=0, command=self.remover)
         adicionar_B : CTkButton = CTkButton(self, text="Adicionar", corner_radius=0, command=self.adicionar)
+        entrada_B : CTkButton = CTkButton(self, text="Entrada", corner_radius=0, command=self.entrada)
 
         editar_B.place(relx=.35, relwidth=.1, rely=.955, relheight=.04)
         remover_B.place(relx=.2, relwidth=.1, rely=.955, relheight=.04)
         adicionar_B.place(relx=.05, relwidth=.1, rely=.955, relheight=.04)
+        entrada_B.place(relx=.7, relwidth=.1, rely=.955, relheight=.04)
 
 
     def menu(self):
         saida_B : CTkButton = CTkButton(self, text="Saída", corner_radius=0, command=self.saida)
         saida_B.place(relx=.85, relwidth=.1, rely=.955, relheight=.04)
+        
 
 
     
     def saida(self):
         item = self.tabela.selection()
         if not item:
-            msg.showinfo("Falha", "Nenhum produto selecionado!", parent=self)
+            msg.showerror("Falha", "Nenhum produto selecionado!", parent=self)
             return
         produto = self.tabela.item(item)["values"][1]
         
         values = self.tabela.item(item)["values"]
         Saida(self, values)
+
+        print(f"Registro realizado: {produto} alterado no estoque")
+
+    
+    def entrada(self):
+        item = self.tabela.selection()
+        if not item:
+            msg.showerror("Falha", "Nenhum produto selecionado!", parent=self)
+            return
+        produto = self.tabela.item(item)["values"][1]
+        
+        values = self.tabela.item(item)["values"]
+        Entrada(self, values)
 
         print(f"Registro realizado: {produto} alterado no estoque")
 
@@ -76,7 +95,7 @@ class Estoque(CTkToplevel):
     def editar(self):
         produto = self.tabela.selection()
         if not produto:
-            msg.showinfo("Falha", "Nenhum produto selecionado!", parent=self)
+            msg.showerror("Falha", "Nenhum produto selecionado!", parent=self)
             return
         values = self.tabela.item(produto)["values"]
         Editar(self, values)
@@ -92,7 +111,7 @@ class Estoque(CTkToplevel):
     def remover(self):
         produto = self.tabela.selection()
         if not produto:
-            msg.showinfo("Falha", "Nenhum produto selecionado!", parent=self)
+            msg.showerror("Falha", "Nenhum produto selecionado!", parent=self)
             return
         values = self.tabela.item(produto)["values"]
 
@@ -144,7 +163,11 @@ class Tabela(Treeview):
             "linha_2",
             background="#888888"
         )
-       
+    
+        self.tag_configure(
+            "estoque_baixo",
+            foreground="RED"
+        )
 
     def layout(self):
         self.inserir_registros()
@@ -155,7 +178,15 @@ class Tabela(Treeview):
         for index, resgistro in enumerate(registros):
             valores : tuple = (resgistro.get("codigo"), resgistro.get("produto").title(), resgistro.get("modelo"), resgistro.get("quantidade"))
             
+            estoque = int(resgistro.get("quantidade"))
+
             if index % 2 != 0:
-                self.insert("", "end", values=valores, tags=("linha_1", ))
+                if estoque < 10:
+                    self.insert("", "end", values=valores, tags=("linha_1","estoque_baixo", ))
+                else:
+                    self.insert("", "end", values=valores, tags=("linha_1", ))
             else:
-                self.insert("", "end", values=valores, tags=("linha_2"))
+                if estoque < 10:
+                    self.insert("", "end", values=valores, tags=("linha_2", "estoque_baixo",))
+                else:
+                    self.insert("", "end", values=valores, tags=("linha_2",))

@@ -22,6 +22,10 @@ class Area_Trabalho(CTkFrame):
         largura_T = self.master.winfo_screenwidth()
         altura_T = (self.master.winfo_screenheight() - (self.master.winfo_screenheight() * 0.05))
 
+        largura_T = 1366
+        altura_T = 729
+
+        
         image_path : Path  = Path.cwd() / "Imagens/02.png"
 
         image = Image.open(image_path)
@@ -47,7 +51,7 @@ class Area_Trabalho(CTkFrame):
     def icones(self):
         for icon in self.lista_icones:
 
-            texto_L : CTkLabel = CTkLabel(self, text=icon, font=("Itim", 14), fg_color="#F4F4F6",
+            texto_L : CTkLabel = CTkLabel(self, text=icon , text_color="BLACK", font=("Itim", 14), fg_color="#F4F4F6",
                                           corner_radius=0)
             texto_L.place(relx=.4, rely=.07)
             
