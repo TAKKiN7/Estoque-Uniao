@@ -12,16 +12,32 @@ class Area_Trabalho(CTkFrame):
 
     lista_icones : dict = {
         "Estoque": {
-            "pos_x": .4,
-            "pos_y": .005,
-            "relwidth" : .04,
-            "cor" : "#F4F4F6"
+            "pos_x": .15,
+            "pos_y": .8,
+            "relwidth" : .1,
+            "relheight" : .1,
+            "cor" : "#D9D9D9"
         },
         "Sair" : {
             "pos_x": .005,
-            "pos_y": .9,
-            "relwidth" : .04,
-            "cor" : "#E15203"
+            "pos_y": .8,
+            "relwidth" : .1,
+            "relheight" : .1,
+            "cor" : "#D9D9D9"
+        },
+        "Impressora" : {
+            "pos_x": .25,
+            "pos_y": .8,
+            "relwidth" : .1,
+            "relheight" : .1,
+            "cor" : "#D9D9D9"
+        },
+        "TI" : {
+            "pos_x": .35,
+            "pos_y": .8,
+            "relwidth" : .1,
+            "relheight" : .1,
+            "cor" : "#D9D9D9"
         }
     }
 
@@ -73,6 +89,7 @@ class Area_Trabalho(CTkFrame):
             pos_x = self.lista_icones.get(icone).get("pos_x")
             pos_y = self.lista_icones.get(icone).get("pos_y")
             relwidth= self.lista_icones.get(icone).get("relwidth")
+            relheight= self.lista_icones.get(icone).get("relheight")
 
             texto_L : CTkLabel = CTkLabel(self, text=icone , text_color="BLACK", font=("Itim", 14), fg_color="#F4F4F6",
                                           corner_radius=0)
@@ -85,23 +102,22 @@ class Area_Trabalho(CTkFrame):
 
             cor = self.lista_icones.get(icone).get("cor")
 
-            imagem : CTkImage = CTkImage(light_image=image, dark_image=image, size=(45, 45))
+            imagem : CTkImage = CTkImage(light_image=image, dark_image=image, size=(60, 60))
             imagem_B : CTkButton = CTkButton(self, image=imagem, text="", fg_color=cor,
-                                           corner_radius=0, bg_color=cor, hover_color=cor)
+                                           corner_radius=0, bg_color=cor, hover_color=cor,
+                                           command=lambda: print())
 
 
             imagem_B.bind("<Enter>", lambda e, botao=imagem_B: self.enter_mouse(e, botao))
             imagem_B.bind("<Leave>", lambda e, botao=imagem_B: self.leave_mouse(e, botao))
-            imagem_B.bind("<Double-Button-1>", lambda e, programa=icone: self.double_click(e, programa))
+            imagem_B.bind("<Button-1>", lambda e, programa=icone: self.double_click(e, programa))
             
 
             
 
             
-            imagem_B.place(relx=pos_x, rely=pos_y, relwidth=relwidth)
+            imagem_B.place(relx=pos_x, rely=pos_y, relwidth=relwidth, relheight=relheight)
     
-
-
 
 
     def double_click(self, e, nome_programa : str):
@@ -111,19 +127,26 @@ class Area_Trabalho(CTkFrame):
             case "Estoque":
                 janela_Estoque : Estoque = Estoque(self.master)
             case "Impressora":
-                janela_Impressora : Impressora = Impressora(self.master)
+                msg.showinfo("Não encontrado", "disponível em breve!", parent=self.master)
+                #janela_Impressora : Impressora = Impressora(self.master)
+            case "TI":
+                msg.showinfo("Não encontrado", "disponível em breve!", parent=self.master)
             case "Sair":
                 self.fechar()
 
     
     def enter_mouse(self, e, widget : CTkButton):
-        widget.configure(border_width=1, border_color="BLACK")
-    
+        widget.configure(border_width=1, border_color="#A7A7A7")
+        widget.place(rely=.79)
+
     def leave_mouse(self, e, widget : CTkButton):
         widget.configure(border_width=0)
+        widget.place(rely=.8)
 
 
 
     def fechar(self):
         res = msg.askokcancel("Fechar", "Tem certeza que deseja fechar?", parent=self.master)
+        if not res:
+            return
         self.master.destroy()

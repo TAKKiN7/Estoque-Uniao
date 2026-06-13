@@ -10,7 +10,7 @@ class Editar(CTkToplevel):
         self.master = master
         self.values = values
         self.codigo = self.values[0]
-        super().__init__(master, fg_color="#aaaaaa")
+        super().__init__(master, fg_color="#848688")
         self.config()
         self.layout()
 
@@ -33,10 +33,26 @@ class Editar(CTkToplevel):
 
 
     def layout(self):
-        nome_produto_L : CTkLabel = CTkLabel(self, text="Nome do produto")
+        nome_produto_L = CTkLabel(
+            self,
+            text="Nome do produto",
+            font=("Itim", 14, "bold"),
+            text_color="#1E293B"
+        )
+
         nome_prduto : StringVar = StringVar() 
         nome_prduto.set(self.values[1])
-        nome_produto_E : CTkEntry = CTkEntry(self, font=("Itim", 13), textvariable=nome_prduto)
+        nome_produto_E = CTkEntry(
+            self,
+            font=("Itim", 13),
+            textvariable=nome_prduto,
+            height=35,
+            corner_radius=8,
+            border_width=2,
+            border_color="#2563EB",
+            fg_color="#FFFFFF",
+            text_color="#1E293B"
+        )
 
         nome_produto_E.bind("<Escape>", lambda e: self.fechar(e))
         nome_produto_E.bind("<Return>", lambda e: self.tab(e))
@@ -44,14 +60,60 @@ class Editar(CTkToplevel):
         
         quantidade = StringVar()
         quantidade.set(self.values[-1])
-        quantidade_estoque_L : CTkLabel = CTkLabel(self, text="Quantidade em estoque")
-        quantidade_estoque_E : CTkEntry = CTkEntry(self, font=("itim", 13), textvariable=quantidade)
+        quantidade_estoque_L = CTkLabel(
+            self,
+            text="Quantidade em estoque",
+            font=("Itim", 14, "bold"),
+            text_color="#1E293B"
+        )
+
+        quantidade_estoque_E = CTkEntry(
+            self,
+            font=("Itim", 13, "bold"),
+            textvariable=quantidade,
+            height=35,
+            corner_radius=8,
+            border_width=2,
+            border_color="#0891B2",
+            fg_color="#FFFFFF",
+            text_color="#1E293B",
+            justify="center"
+        )
         quantidade_estoque_E.bind("<Escape>", lambda e: self.fechar(e))
         quantidade_estoque_E.bind("<Return>", lambda e: self.confirmar(nome_produto_E.get(), quantidade_estoque_E.get(), e))
 
-        confirmar_B : CTkButton = CTkButton(self, text="OK", font=("Itim", 13, "bold"),
-                                            command=lambda: self.confirmar(nome_produto_E.get(), quantidade_estoque_E.get()))
-        cancelar_B : CTkButton = CTkButton(self, text="Cancelar", font=("itim", 13, "bold"), command=self.fechar)
+        confirmar_B = CTkButton(
+            self,
+            text="✓ OK",
+            command=lambda: self.confirmar(
+                nome_produto_E.get(),
+                quantidade_estoque_E.get()
+            ),
+            width=120,
+            height=35,
+            corner_radius=8,
+            fg_color="#16A34A",
+            hover_color="#15803D",
+            text_color="white",
+            font=("Itim", 13, "bold"),
+            border_width=2,
+            border_color="#166534"
+        )
+
+        cancelar_B = CTkButton(
+            self,
+            text="✕ Cancelar",
+            command=self.fechar,
+            width=120,
+            height=35,
+            corner_radius=8,
+            fg_color="#6B7280",
+            hover_color="#4B5563",
+            text_color="white",
+            font=("Itim", 13, "bold"),
+            border_width=2,
+            border_color="#374151"
+        )
 
         nome_produto_L.place(relx=.1, rely=.05)
         nome_produto_E.place(relx=.1, rely=.17, relwidth=.7)
