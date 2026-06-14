@@ -39,7 +39,7 @@ class Estoque(CTkToplevel):
     def layout(self):
         self.tabela : Tabela = Tabela(self)
         #tabela.pack(fill="both", expand=True)
-        self.tabela.place(relx=0, rely=0, relwidth=1, relheight=.95)
+        self.tabela.place(relx=0, rely=0.05, relwidth=1, relheight=.9)
         if self.permissao in ("Admin"):
             self.menu_admin()
         else:
@@ -176,7 +176,7 @@ class Estoque(CTkToplevel):
     def atualizar_tabela(self):
         self.tabela.destroy()
         self.tabela : Tabela = Tabela(self)
-        self.tabela.place(relx=0, rely=0, relwidth=1, relheight=.95)
+        self.tabela.place(relx=0, rely=0.05, relwidth=1, relheight=.9)
 
 
     def remover(self):
@@ -260,6 +260,15 @@ class Tabela(Treeview):
             foreground="#1E293B",
             borderwidth=0
         )
+        # self.style.configure(
+        #     "Treeview",
+        #     font=("Segoe UI", 10),
+        #     rowheight=36,
+        #     background="#FFFFFF",
+        #     fieldbackground="#FFFFFF",
+        #     foreground="#334155",
+        #     borderwidth=0
+        # )
 
         self.style.map(
             "Treeview",
