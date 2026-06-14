@@ -80,7 +80,7 @@ class Database:
         
         conn = self.conn()
         if not conn:
-            return
+            return None
         try:
             with self.conn() as conn:
                 cur = conn.cursor()
@@ -96,11 +96,11 @@ class Database:
         res = self.consultar_produto_codigo(codigo)
         
         if not res:
-            return "Produto não encontrado no banco de dados!"
+            return None #produto nao encontrado no banco de dados#
         
         conn = self.conn()
         if not conn:
-            return
+            return None
         try:
             with self.conn() as conn:
                 cur = conn.cursor()

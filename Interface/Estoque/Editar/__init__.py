@@ -150,7 +150,8 @@ class Editar(CTkToplevel):
         values : tuple = (produto, quantidade, self.codigo)
 
         self.destroy()
-        database.atualizar_produto(self.codigo, values)
-        msg.showinfo("Concluído", "Produto atualizado!", parent=self.master)
+        res = database.atualizar_produto(self.codigo, values)
+        if res:
+            msg.showinfo("Concluído", "Produto atualizado!", parent=self.master)
         self.master.grab_set()
         self.master.atualizar_tabela()
