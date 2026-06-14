@@ -6,6 +6,7 @@ from pathlib import Path
 from Interface.Estoque import Estoque
 from Interface.Impressora import Impressora
 from tkinter import messagebox as msg
+from Login.usuario import user_autoridade
 
 class Area_Trabalho(CTkFrame):
     #lista_icones : list = ["Estoque", "Impressora"]
@@ -16,28 +17,28 @@ class Area_Trabalho(CTkFrame):
             "pos_y": .8,
             "relwidth" : .1,
             "relheight" : .1,
-            "cor" : "#D9D9D9"
+            "cor" : "#DCE4F2"
         },
         "Sair" : {
             "pos_x": .005,
             "pos_y": .8,
             "relwidth" : .1,
             "relheight" : .1,
-            "cor" : "#D9D9D9"
+            "cor" : "#DCE4F2"
         },
         "Impressora" : {
             "pos_x": .25,
             "pos_y": .8,
             "relwidth" : .1,
             "relheight" : .1,
-            "cor" : "#D9D9D9"
+            "cor" : "#DCE4F2"
         },
         "TI" : {
             "pos_x": .35,
             "pos_y": .8,
             "relwidth" : .1,
             "relheight" : .1,
-            "cor" : "#D9D9D9"
+            "cor" : "#DCE4F2"
         }
     }
 
@@ -85,6 +86,9 @@ class Area_Trabalho(CTkFrame):
 
     def icones(self):
         for icone in self.lista_icones:
+            if user_autoridade.autoridade.lower() == "default":
+                if icone not in ("Sair", "Estoque"):
+                    continue
 
             pos_x = self.lista_icones.get(icone).get("pos_x")
             pos_y = self.lista_icones.get(icone).get("pos_y")

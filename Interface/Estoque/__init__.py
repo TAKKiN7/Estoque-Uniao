@@ -202,7 +202,7 @@ class Estoque(CTkToplevel):
 
         
 
-        res = database.remover_produto(codigo)
+        res = database.remover_produto(codigo, master=self)
         print(res)
 
         if "não" in res:

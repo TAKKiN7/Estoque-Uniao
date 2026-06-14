@@ -141,7 +141,7 @@ class Entrada(CTkToplevel):
             msg.showerror("Falha","Campo *Quantidade de entrada* inválido!", parent=self.master)
             return
         
-        item  = database.consultar_produto_codigo(self.codigo)
+        item  = database.consultar_produto_codigo(self.codigo, master=self.master)
 
         quantidade_atual = item[-1]
 
@@ -158,7 +158,7 @@ class Entrada(CTkToplevel):
         values : tuple = (produto, quantidade_nova, self.codigo)
 
         self.destroy()
-        database.atualizar_produto(self.codigo, values)
+        database.atualizar_produto(self.codigo, values, master=self.master)
         msg.showinfo("Concluído", "Produto atualizado!", parent=self.master)
         self.master.grab_set()
         self.master.atualizar_tabela()

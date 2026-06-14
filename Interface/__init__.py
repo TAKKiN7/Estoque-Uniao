@@ -21,7 +21,7 @@ class App(CTk):
         tele_L = (self.winfo_screenwidth() // 2) - (janela_L // 2)
         self.geometry(f"{janela_L}x{janela_A}+{tele_L}+{tela_A}")
 
-        image_path : Path  = Path.cwd() / "Imagens/01.png"
+        image_path : Path  = Path.cwd() / "Imagens/001.png"
 
         image = Image.open(image_path)
         papel_parede_I : CTkImage = CTkImage(light_image=image, dark_image=image, size=(janela_L, janela_A))

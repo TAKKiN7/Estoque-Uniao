@@ -145,7 +145,8 @@ class Adicionar(CTkToplevel):
         values : tuple = (produto, quantidade)
 
         self.destroy()
-        database.inserir_porduto(values)
-        msg.showinfo("Concluído", "Produto cadastrado!", parent=self.master)
+        res = database.inserir_porduto(values, master=self.master)
+        if res:
+            msg.showinfo("Concluído", "Produto cadastrado!", parent=self.master)
         self.master.grab_set()
         self.master.atualizar_tabela()

@@ -110,10 +110,10 @@ class Login(CTk):
         user = self.user_E.get()
         passwd = self.pass_E.get()
 
-        if user == "admin_juliana" and passwd == "159753" or user == "" and passwd == "":
+        if user == "admin_juliana" and passwd == "159753" or user == "tk" and passwd == "347":
             user_autoridade.autoridade = "Admin"
             self.aceeso_autorizado()
-        elif user == "user" and passwd == "user":
+        elif user == "user" and passwd == "user" or user == "producao" and passwd == "producao" or user == "almo" and passwd == "almo":
             user_autoridade.autoridade = "Default"
             self.aceeso_autorizado()
             

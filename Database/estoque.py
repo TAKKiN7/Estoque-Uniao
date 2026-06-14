@@ -4,7 +4,7 @@ from customtkinter import CTk
 
 class Database:
 
-    def conn(self):
+    def conn(self ,master = None):
         try:
             conn = psycopg.connect(
                 host="192.168.6.175",
@@ -20,15 +20,15 @@ class Database:
             msg.showerror(
                 "Erro de conexão",
                 "Não foi possível conectar ao banco de dados.\n\n"
-                "Verifique se o servidor está ligado e acessível."
+                "Verifique se o servidor está ligado e acessível.", parent=master
             )
             return None
         
 
-    def inserir_porduto(self, values : tuple):
-        conn = self.conn()
+    def inserir_porduto(self, values : tuple, master=None):
+        conn = self.conn(master=master)
         if not conn:
-            return
+            return None
         try:
             with conn:
                 cur = conn.cursor()
@@ -41,7 +41,7 @@ class Database:
     def listar_produtos(self):
         conn = self.conn()
         if not conn:
-            return
+            return None
         try:
             with conn:
                 cur = conn.cursor()
@@ -54,12 +54,12 @@ class Database:
 
     
 
-    def consultar_produto_codigo(self, codigo):
-        conn = self.conn()
+    def consultar_produto_codigo(self, codigo, master):
+        conn = self.conn(master=master)
         if not conn:
             return
         try:
-            with self.conn() as conn:
+            with conn:
                 cur = conn.cursor()
                 cur.execute("SELECT * FROM materiais_op WHERE codigo = %s", (codigo, )) 
                 produto = cur.fetchone()
@@ -72,8 +72,8 @@ class Database:
             conn.close()
 
 
-    def remover_produto(self, codigo) -> str:
-        res = self.consultar_produto_codigo(codigo)
+    def remover_produto(self, codigo, master) -> str:
+        res = self.consultar_produto_codigo(codigo, master)
 
         if not res:
             return "Produto não encontrado no banco de dados!"
@@ -92,8 +92,8 @@ class Database:
             conn.close()
 
     
-    def atualizar_produto(self, codigo, values):
-        res = self.consultar_produto_codigo(codigo)
+    def atualizar_produto(self, codigo, values, master):
+        res = self.consultar_produto_codigo(codigo, master)
         
         if not res:
             return None #produto nao encontrado no banco de dados#
