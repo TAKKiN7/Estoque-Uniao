@@ -42,6 +42,7 @@ class Estoque(CTkToplevel):
         self.tabela.place(relx=0, rely=0.05, relwidth=1, relheight=.9)
         if self.permissao in ("Admin"):
             self.menu_admin()
+            self.tabela.bind("<Double-Button-1>", lambda e: self.entrada(e))
         else:
             self.tabela.bind("<Double-Button-1>", lambda e: self.saida(e))
         self.menu()
@@ -144,10 +145,10 @@ class Estoque(CTkToplevel):
         values = self.tabela.item(item)["values"]
         Saida(self, values)
 
-        print(f"Registro realizado: {produto} alterado no estoque")
+        #print(f"Registro realizado: {produto} alterado no estoque")
 
     
-    def entrada(self):
+    def entrada(self, e=None):
         item = self.tabela.selection()
         if not item:
             msg.showerror("Falha", "Nenhum produto selecionado!", parent=self)
@@ -176,6 +177,11 @@ class Estoque(CTkToplevel):
     def atualizar_tabela(self):
         self.tabela.destroy()
         self.tabela : Tabela = Tabela(self)
+        if self.permissao in ("Admin"):
+            self.menu_admin()
+            self.tabela.bind("<Double-Button-1>", lambda e: self.entrada(e))
+        else:
+            self.tabela.bind("<Double-Button-1>", lambda e: self.saida(e))
         self.tabela.place(relx=0, rely=0.05, relwidth=1, relheight=.9)
 
 
@@ -242,7 +248,7 @@ class Tabela(Treeview):
 
         self.tag_configure(
             "linha_2",
-            background="#888888"
+            background="#999999"
         )
     
         self.tag_configure(
@@ -294,7 +300,7 @@ class Tabela(Treeview):
 
 
 
-    def inserir_registros(self):
+    def inserir_registros_teste_manual(self):
         itens = [
     ("AVENTAL DE RASPA", 41),
     ("BOTINA DE ELASTICO TAMANHO 38", 14),
@@ -392,20 +398,20 @@ class Tabela(Treeview):
                     self.insert("", "end", values=valores, tags=("linha_2",))
 
 
-    # def inserir_registros(self):
-    #     registros : list = database.listar_produtos()
-    #     for index, registro in enumerate(registros):
-    #         valores : tuple = (registro[0], registro[1].upper(), registro[2])
+    def inserir_registros(self):
+        registros : list = database.listar_produtos()
+        for index, registro in enumerate(registros):
+            valores : tuple = (registro[0], registro[1].upper(), registro[2])
             
-    #         estoque = int(registro[-1])
+            estoque = int(registro[-1])
 
-    #         if index % 2 != 0:
-    #             if estoque < 10:
-    #                 self.insert("", "end", values=valores, tags=("linha_1","estoque_baixo", ))
-    #             else:
-    #                 self.insert("", "end", values=valores, tags=("linha_1", ))
-    #         else:
-    #             if estoque < 10:
-    #                 self.insert("", "end", values=valores, tags=("linha_2", "estoque_baixo",))
-    #             else:
-    #                 self.insert("", "end", values=valores, tags=("linha_2",))
+            if index % 2 != 0:
+                if estoque < 10:
+                    self.insert("", "end", values=valores, tags=("linha_1","estoque_baixo", ))
+                else:
+                    self.insert("", "end", values=valores, tags=("linha_1", ))
+            else:
+                if estoque < 10:
+                    self.insert("", "end", values=valores, tags=("linha_2", "estoque_baixo",))
+                else:
+                    self.insert("", "end", values=valores, tags=("linha_2",))

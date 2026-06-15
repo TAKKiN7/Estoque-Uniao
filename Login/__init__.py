@@ -10,7 +10,7 @@ from Login.usuario import user_autoridade
 
 class Login(CTk):
     def __init__(self):
-        super().__init__(fg_color="#fff")
+        super().__init__(fg_color="#E6EBF4")
         self.config()
         self.layout()
         self.mainloop()
@@ -57,10 +57,10 @@ class Login(CTk):
             font=("Itim", 14),
             height=40,
             corner_radius=8,
-            border_width=2,
+            border_width=3,
             border_color="#2563EB",
             fg_color="#FFFFFF",
-            bg_color="#fff",
+            bg_color="#E6EBF4",
             text_color="#1E293B"
         )
         self.user_E.bind("<Return>", lambda e: self.tab(e))
@@ -73,10 +73,10 @@ class Login(CTk):
             font=("Itim", 14),
             height=40,
             corner_radius=8,
-            border_width=2,
+            border_width=3,
             border_color="#2563EB",
             fg_color="#FFFFFF",
-            bg_color="#fff",
+            bg_color="#E6EBF4",
             text_color="#1E293B"
         )
 

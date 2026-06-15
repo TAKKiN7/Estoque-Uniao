@@ -131,8 +131,7 @@ class Area_Trabalho(CTkFrame):
             case "Estoque":
                 janela_Estoque : Estoque = Estoque(self.master)
             case "Impressora":
-                msg.showinfo("Não encontrado", "disponível em breve!", parent=self.master)
-                #janela_Impressora : Impressora = Impressora(self.master)
+                janela_Impressora : Impressora = Impressora(self.master)
             case "TI":
                 msg.showinfo("Não encontrado", "disponível em breve!", parent=self.master)
             case "Sair":

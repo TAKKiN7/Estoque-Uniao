@@ -1,7 +1,7 @@
 from customtkinter import CTkToplevel, CTkButton
-from tkinter.ttk import Treeview
-from Database.estoque import database
-from Interface.Estoque.Adicionar import Adicionar
+from tkinter.ttk import Treeview, Style
+from Database.impressoras import impressora_db
+from Interface.Impressora.Adicionar import Adicionar
 from Interface.Estoque.Editar import Editar
 from tkinter import messagebox as msg
 from Login.usuario import user_autoridade
@@ -12,7 +12,7 @@ class Impressora(CTkToplevel):
     def __init__(self, master):
         self.permissao = user_autoridade.autoridade
         print(self.permissao)
-        super().__init__(master, fg_color="WHITE")
+        super().__init__(master, fg_color="#1E293B")
         self.config()
         self.layout()
 
@@ -40,20 +40,70 @@ class Impressora(CTkToplevel):
         self.tabela.place(relx=0, rely=0, relwidth=1, relheight=.95)
         if self.permissao in ("Admin"):
             self.menu_admin()
+            self.tabela.bind("<Double-Button-1>", lambda e: self.entrada(e))
+        else:
+            self.tabela.bind("<Double-Button-1>", lambda e: self.saida(e))
         self.menu()
 
     def menu_admin(self): 
 
-        editar_B : CTkButton = CTkButton(self, text="Editar", corner_radius=0, command=self.editar)
-        remover_B : CTkButton = CTkButton(self, text="Remover", corner_radius=0, command=self.remover)
-        adicionar_B : CTkButton = CTkButton(self, text="Adicionar", corner_radius=0, command=self.adicionar)
 
-        editar_B.place(relx=.35, relwidth=.1, rely=.955, relheight=.04)
-        remover_B.place(relx=.2, relwidth=.1, rely=.955, relheight=.04)
-        adicionar_B.place(relx=.05, relwidth=.1, rely=.955, relheight=.04)
+        editar_B = CTkButton(
+            self,
+            text="✏️Editar",
+            command=self.editar,
+            width=120, height=35,
+            corner_radius=8,
+            fg_color="#2563EB", hover_color="#1D4ED8",
+            text_color="white",
+            font=("Segoe UI", 14, "bold"),
+            border_width=2, border_color="#1E40AF"
+)
+
+        remover_B = CTkButton(
+            self,
+            text="🗑 Remover",
+            command=self.remover,
+            width=120, height=35,
+            corner_radius=8,
+            fg_color="#DC2626", hover_color="#B91C1C",
+            text_color="white",
+            font=("Segoe UI", 14, "bold"),
+            border_width=2, border_color="#991B1B"
+        )
+
+        adicionar_B = CTkButton(
+            self,
+            text="➕ Adicionar",
+            command=self.adicionar,
+            width=120, height=35,
+            corner_radius=8,
+            fg_color="#16A34A", hover_color="#15803D",
+            text_color="white",
+            font=("Segoe UI", 14, "bold"),
+            border_width=2, border_color="#166534"
+        )
+
+        editar_B.place(relx=.34, relwidth=.12, rely=.955, relheight=.04)
+        remover_B.place(relx=.18, relwidth=.12, rely=.955, relheight=.04)
+        adicionar_B.place(relx=.04, relwidth=.12, rely=.955, relheight=.04)
 
 
- 
+    def menu(self):
+        atualizar_B = CTkButton(
+            self,
+            text="🔃",
+            command=self.atualizar_tabela,
+            width=120, height=35,
+            corner_radius=8,
+            fg_color="#F1DB13", hover_color="#F1DB13",
+            text_color="white",
+            font=("Segoe UI", 14, "bold"),
+            border_width=2, border_color="#C0AF15"
+        )
+        atualizar_B.place(relx=.9, relwidth=.05, rely=.955, relheight=.04)
+
+
     def adicionar(self):
         Adicionar(self)
     
@@ -71,6 +121,11 @@ class Impressora(CTkToplevel):
     def atualizar_tabela(self):
         self.tabela.destroy()
         self.tabela : Tabela = Tabela(self)
+        if self.permissao in ("Admin"):
+            self.menu_admin()
+            self.tabela.bind("<Double-Button-1>", lambda e: self.entrada(e))
+        else:
+            self.tabela.bind("<Double-Button-1>", lambda e: self.saida(e))
         self.tabela.place(relx=0, rely=0, relwidth=1, relheight=.95)
 
 
@@ -97,7 +152,7 @@ class Impressora(CTkToplevel):
 
         
 
-        res = database.remover_produto(codigo)
+        res = database.remover_produto(codigo, master=self)
         print(res)
 
         if "não" in res:
@@ -114,18 +169,24 @@ class Impressora(CTkToplevel):
 class Tabela(Treeview):
     def __init__(self, master):
         super().__init__(master, show="headings")
+        self.style = Style()
+        self.style.theme_use("clam")
         self.config()
         self.layout()
         
     def config(self):
-        self["columns"] = ("codigo", "produto", "modelo", "quantidade")
+        self["columns"] = ("id", "modelo", "ip", "local", "tonner")
 
-        self.column("codigo", width=10)
+        self.column("id", width=70, stretch=False)
+        self.column("ip", anchor="center")
+        self.column("local", anchor="center")
+        self.column("tonner", width=90,stretch=False, anchor="center")
 
-        self.heading("codigo", text="Código")
-        self.heading("produto", text="Produto")
+        self.heading("id", text="ID")
         self.heading("modelo", text="Modelo")
-        self.heading("quantidade", text="Quantidade")
+        self.heading("ip", text="IP")
+        self.heading("local", text="Local")
+        self.heading("tonner", text="Tonner")
 
 
         self.tag_configure(
@@ -135,32 +196,72 @@ class Tabela(Treeview):
 
         self.tag_configure(
             "linha_2",
-            background="#888888"
+            background="#999999"
         )
     
         self.tag_configure(
-            "estoque_baixo",
+            "tonner_baixo",
             foreground="RED"
+        )
+        
+        self.tag_configure(
+            "tonner_otimo",
+            foreground="GREEN"
+        )
+
+
+        self.style.configure(
+            "Treeview",
+            font=("Segoe UI", 11),
+            rowheight=32,
+            background="#FFFFFF",
+            fieldbackground="#FFFFFF",
+            foreground="#1E293B",
+            borderwidth=0
+        )
+
+
+        self.style.map(
+            "Treeview",
+            background=[("selected", "#2563EB")],
+            foreground=[("selected", "white")]
+        )
+
+        self.style.configure(
+            "Treeview.Heading",
+            font=("Segoe UI", 12, "bold"),
+            background="#081233",
+            foreground="white",
+            relief="flat"
+        )
+
+        self.style.map(
+            "Treeview.Heading",
+            background=[("active", "#2563EB")]
         )
 
     def layout(self):
         self.inserir_registros()
+        
 
 
     def inserir_registros(self):
-        registros : list = database.listar_produtos()
-        for index, resgistro in enumerate(registros):
-            valores : tuple = (resgistro.get("codigo"), resgistro.get("produto").title(), resgistro.get("modelo"), resgistro.get("quantidade"))
-            
-            estoque = int(resgistro.get("quantidade"))
+        registros : list = impressora_db.listar_registros()
+
+        for index, registro in enumerate(registros):
+
+            valores = (registro[0], registro[1], registro[2], registro[3], registro[4])
+
+            quantidade_tonner = int(registro[-1])
 
             if index % 2 != 0:
-                if estoque < 10:
-                    self.insert("", "end", values=valores, tags=("linha_1","estoque_baixo", ))
+                if quantidade_tonner < 10:
+                    self.insert("", "end", values=valores, tags=("linha_1","tonner_baixo", ))
                 else:
                     self.insert("", "end", values=valores, tags=("linha_1", ))
             else:
-                if estoque < 10:
-                    self.insert("", "end", values=valores, tags=("linha_2", "estoque_baixo",))
+                if quantidade_tonner < 10:
+                    self.insert("", "end", values=valores, tags=("linha_2", "tonner_otimo",))
                 else:
                     self.insert("", "end", values=valores, tags=("linha_2",))
+

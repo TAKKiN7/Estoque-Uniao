@@ -1,6 +1,5 @@
 import psycopg
 from tkinter import messagebox as msg
-from customtkinter import CTk
 
 class Database:
 
@@ -38,8 +37,8 @@ class Database:
             conn.close()
 
     
-    def listar_produtos(self):
-        conn = self.conn()
+    def listar_produtos(self, master=None):
+        conn = self.conn(master=master)
         if not conn:
             return None
         try:

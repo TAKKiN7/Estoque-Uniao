@@ -59,7 +59,7 @@ class Entrada(CTkToplevel):
 
         
         quantidade = StringVar()
-        quantidade.set("0")
+        quantidade.set("")
         quantidade_estoque_L = CTkLabel(
             self,
             text="Quantidade de entrada",
@@ -81,6 +81,7 @@ class Entrada(CTkToplevel):
         )
         quantidade_estoque_E.bind("<Escape>", lambda e: self.fechar(e))
         quantidade_estoque_E.bind("<Return>", lambda e: self.confirmar(nome_produto_E.get(), quantidade_estoque_E.get(), e))
+        self.after(200, lambda: quantidade_estoque_E.focus_set())
 
         confirmar_B = CTkButton(
             self,
