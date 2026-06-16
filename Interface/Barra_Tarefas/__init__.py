@@ -2,7 +2,7 @@ from customtkinter import CTkFrame, CTkEntry, CTkLabel
 from Interface.Menu_s.barra_tarefas import criar_menu
 from tkinter import Menu
 import time
-from threading import Thread
+from Login.usuario import user_autoridade
 
 
 class Barra_Tarefas(CTkFrame):
@@ -15,6 +15,11 @@ class Barra_Tarefas(CTkFrame):
     def config(self):
         self.bind("<Button-3>", lambda e: self.abrir_menu(e))
 
+
+        usuario : str = user_autoridade.user
+        usuario_L : CTkLabel = CTkLabel(self, text=f"Usuário: {usuario}", bg_color="BLACK", fg_color="BLACK",
+                                        text_color="WHITE", font=("Segoe UI", 14, "bold"))
+        usuario_L.place(relx=0, rely=0)
 
         pesquisar_E : CTkEntry = CTkEntry(self, placeholder_text="Pesquisar...", corner_radius=0, fg_color="WHITE",
                                           border_color="BLACK", border_width=2)

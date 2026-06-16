@@ -142,7 +142,7 @@ class Adicionar(CTkToplevel):
         
         
 
-        values : tuple = (produto, quantidade)
+        values : tuple = (produto.lower(), quantidade)
 
         self.destroy()
         res = database.inserir_porduto(values, master=self.master)

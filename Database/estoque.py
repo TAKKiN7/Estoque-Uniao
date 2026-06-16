@@ -71,6 +71,26 @@ class Database:
             conn.close()
 
 
+    def pesquisar_produtos(self, nome, master):
+        conn = self.conn(master=master)
+
+        if not conn:
+            return None
+        try:
+            with conn:
+                cur = conn.cursor()
+                cur.execute("SELECT * FROM materiais_op WHERE item ILIKE %s", (f"%{nome}%",)) 
+                produtos = cur.fetchall()
+                
+                if not produtos:
+                    return None
+
+                return produtos
+        finally:
+            conn.close()
+
+
+
     def remover_produto(self, codigo, master) -> str:
         res = self.consultar_produto_codigo(codigo, master)
 

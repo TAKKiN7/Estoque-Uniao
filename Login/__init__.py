@@ -112,16 +112,21 @@ class Login(CTk):
 
         if user == "admin_juliana" and passwd == "159753" or user == "tk" and passwd == "347":
             user_autoridade.autoridade = "Admin"
-            self.aceeso_autorizado()
+            if user == "admin_juliana":
+                user_autoridade.user = "JULIANA-RH"
+            elif user == "tk":
+                user_autoridade.user = "TK-TI"
+            self.acesso_autorizado()
         elif user == "user" and passwd == "user" or user == "producao" and passwd == "producao" or user == "almo" and passwd == "almo":
             user_autoridade.autoridade = "Default"
-            self.aceeso_autorizado()
+            user_autoridade.user = "ALMAXARIFADO"
+            self.acesso_autorizado()
             
         else:
             msg.showerror("Falha","Usuário ou senha incorreto(s)", parent=self)
 
 
-    def aceeso_autorizado(self):
+    def acesso_autorizado(self):
         self.destroy()
         App()
     

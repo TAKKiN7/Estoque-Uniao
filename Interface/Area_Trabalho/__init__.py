@@ -17,28 +17,28 @@ class Area_Trabalho(CTkFrame):
             "pos_y": .8,
             "relwidth" : .1,
             "relheight" : .1,
-            "cor" : "#DCE4F2"
+            "cor" : "#000000"
         },
         "Sair" : {
             "pos_x": .005,
             "pos_y": .8,
             "relwidth" : .1,
             "relheight" : .1,
-            "cor" : "#DCE4F2"
+            "cor" : "#000000"
         },
         "Impressora" : {
             "pos_x": .25,
             "pos_y": .8,
             "relwidth" : .1,
             "relheight" : .1,
-            "cor" : "#DCE4F2"
+            "cor" : "#000000"
         },
         "TI" : {
             "pos_x": .35,
             "pos_y": .8,
             "relwidth" : .1,
             "relheight" : .1,
-            "cor" : "#DCE4F2"
+            "cor" : "#000000"
         }
     }
 

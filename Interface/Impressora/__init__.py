@@ -31,6 +31,8 @@ class Impressora(CTkToplevel):
         pos_x = int((self.winfo_screenwidth() / 2) - (largura_janela / 2))
         pos_y = int((self.winfo_screenheight() / 2) - (altura_janela / 2)) - int(altura_janela * 0.05)
 
+        self.bind("<Escape>", lambda e: self.fechar(e))
+
         self.geometry(f"{largura_janela}x{altura_janela}+{pos_x}+{pos_y}")
 
 
@@ -84,8 +86,8 @@ class Impressora(CTkToplevel):
             border_width=2, border_color="#166534"
         )
 
-        editar_B.place(relx=.34, relwidth=.12, rely=.955, relheight=.04)
-        remover_B.place(relx=.18, relwidth=.12, rely=.955, relheight=.04)
+        #editar_B.place(relx=.34, relwidth=.12, rely=.955, relheight=.04)
+        #remover_B.place(relx=.18, relwidth=.12, rely=.955, relheight=.04)
         adicionar_B.place(relx=.04, relwidth=.12, rely=.955, relheight=.04)
 
 
@@ -165,6 +167,8 @@ class Impressora(CTkToplevel):
         for item in self.tabela.selection():
                 self.tabela.selection_remove(item)
 
+    def fechar(self, e=None):
+        self.destroy()
 
 class Tabela(Treeview):
     def __init__(self, master):

@@ -1,4 +1,4 @@
-from customtkinter import CTkToplevel, CTkButton
+from customtkinter import CTkToplevel, CTkButton, CTkEntry
 from tkinter.ttk import Treeview, Style
 from Database.estoque import database
 from Interface.Estoque.Adicionar import Adicionar
@@ -27,13 +27,18 @@ class Estoque(CTkToplevel):
         largura_janela = 900
         altura_janela = 600 
         
-        self.minsize(largura_janela,altura_janela)
-        self.maxsize(largura_janela,altura_janela)
+        #self.minsize(largura_janela,altura_janela)
+        #self.maxsize(largura_janela,altura_janela)
         
         pos_x = int((self.winfo_screenwidth() / 2) - (largura_janela / 2))
         pos_y = int((self.winfo_screenheight() / 2) - (altura_janela / 2)) - int(altura_janela * 0.05)
 
+
+        self.bind("<Escape>", lambda e: self.fechar(e))
+
+
         self.geometry(f"{largura_janela}x{altura_janela}+{pos_x}+{pos_y}")
+        self.after(200, lambda: self.attributes("-fullscreen", True))
 
 
     def layout(self):
@@ -48,7 +53,6 @@ class Estoque(CTkToplevel):
         self.menu()
 
     def menu_admin(self): 
-
 
         editar_B = CTkButton(
             self,
@@ -105,6 +109,36 @@ class Estoque(CTkToplevel):
 
 
     def menu(self):
+
+        
+        pesquisa_E = CTkEntry(
+            self,
+            font=("Itim", 14),
+            height=35,
+            placeholder_text="Pesquisar produto",
+            corner_radius=8,
+            border_width=2,
+            border_color="#94A3B8",
+            fg_color="#FFFFFF",
+            text_color="#1E293B"
+        )  
+
+        pesquisa_E.bind("<Return>", lambda e: self.pesquisar(pesquisa_E.get(), e))
+        pesquisa_E.place(relx=.3, rely=0, relwidth=.4)
+
+        fechar_B = CTkButton(
+            self,
+            text="❌",
+            command=self.fechar,
+            width=120, height=35,
+            corner_radius=8,
+            fg_color="#F11313", hover_color="#F11313",
+            text_color="white",
+            font=("Segoe UI", 14, "bold"),
+            border_width=2, border_color="#A81515"
+        )
+        fechar_B.place(relx=.95, rely=0, relwidth=.05)
+
         saida_B = CTkButton(
             self,
             text="📤 Saída",
@@ -129,11 +163,19 @@ class Estoque(CTkToplevel):
             font=("Segoe UI", 14, "bold"),
             border_width=2, border_color="#C0AF15"
         )
-        atualizar_B.place(relx=.47, relwidth=.05, rely=.955, relheight=.04)
+        if self.permissao == "Admin":
+            atualizar_B.place(relx=.63, relwidth=.05, rely=.955, relheight=.04)
+        else:
+            atualizar_B.place(relx=.78, relwidth=.05, rely=.955, relheight=.04)
 
         
+    def pesquisar(self, nome_produto : str, e=None):
+        if not nome_produto.strip():
+            self.atualizar_tabela()
+            return None
+        produtos = database.pesquisar_produtos(nome_produto, master=self.master)
 
-
+        self.atualizar_tabela(produtos)
     
     def saida(self, e=None):
         item = self.tabela.selection()
@@ -174,9 +216,9 @@ class Estoque(CTkToplevel):
 
 
     
-    def atualizar_tabela(self):
+    def atualizar_tabela(self, pesquisa=None):
         self.tabela.destroy()
-        self.tabela : Tabela = Tabela(self)
+        self.tabela : Tabela = Tabela(self, pesquisa)
         if self.permissao in ("Admin"):
             self.menu_admin()
             self.tabela.bind("<Double-Button-1>", lambda e: self.entrada(e))
@@ -221,14 +263,16 @@ class Estoque(CTkToplevel):
         for item in self.tabela.selection():
                 self.tabela.selection_remove(item)
 
+    def fechar(self, e=None):
+        self.destroy()
 
 class Tabela(Treeview):
-    def __init__(self, master):
+    def __init__(self, master, pesquisa=None):
         super().__init__(master, show="headings")
         self.style = Style()
         self.style.theme_use("clam")
         self.config()
-        self.layout()
+        self.layout(pesquisa)
         
     def config(self):
         self["columns"] = ("codigo", "item", "estoque")
@@ -262,7 +306,7 @@ class Tabela(Treeview):
             font=("Segoe UI", 11),
             rowheight=32,
             background="#FFFFFF",
-            fieldbackground="#FFFFFF",
+            fieldbackground="#1E293B",
             foreground="#1E293B",
             borderwidth=0
         )
@@ -295,96 +339,19 @@ class Tabela(Treeview):
             background=[("active", "#2563EB")]
         )
 
-    def layout(self):
-        self.inserir_registros()
+    def layout(self, pesquisa=None):
+        if not pesquisa:
+            self.inserir_registros()
+            return
+        self.inserir_registros_manual(pesquisa)
 
 
 
-    def inserir_registros_teste_manual(self):
-        itens = [
-    ("AVENTAL DE RASPA", 41),
-    ("BOTINA DE ELASTICO TAMANHO 38", 14),
-    ("BOTINA DE ELASTICO TAMANHO 39", 12),
-    ("BOTINA DE ELASTICO TAMANHO 40", 123),
-    ("BOTINA DE ELASTICO TAMANHO 41", 123),
-    ("BOTINA DE ELASTICO TAMANHO 42", 123),
-    ("BOTINA DE ELASTICO TAMANHO 43", 123),
-    ("BOTINA DE ELASTICO TAMANHO 44", 123),
-    ("BOTINA DE ELASTICO TAMANHO 45", 0),
-    ("BOTINA DE ELASTICO TAMANHO 46", 0),
-    ("BOTINA DE ELASTICO TAMANHO 47", 0),
-    ("BOTINA NOBUCK TAMANHO 36", 0),
-    ("BOTINA NOBUCK TAMANHO 37", 0),
-    ("BOTINA NOBUCK TAMANHO 38", 0),
-    ("BOTINA NOBUCK TAMANHO 39", 0),
-    ("BOTINA NOBUCK TAMANHO 40", 0),
-    ("BOTINA NOBUCK TAMANHO 41", 0),
-    ("BOTINA NOBUCK TAMANHO 42", 0),
-    ("CALÇA JEANS INDUSTRIAL TAMANHO 36", 0),
-    ("CALÇA JEANS INDUSTRIAL TAMANHO 38", 0),
-    ("CALÇA JEANS INDUSTRIAL TAMANHO 40", 0),
-    ("CALÇA JEANS INDUSTRIAL TAMANHO 42", 0),
-    ("CALÇA JEANS INDUSTRIAL TAMANHO 44", 0),
-    ("CALÇA JEANS INDUSTRIAL TAMANHO 46", 0),
-    ("CALÇA JEANS INDUSTRIAL TAMANHO 48", 0),
-    ("CALÇA JEANS INDUSTRIAL TAMANHO 50", 0),
-    ("CALÇA JEANS INDUSTRIAL TAMANHO 52", 0),
-    ("CALÇA JEANS INDUSTRIAL TAMANHO 54", 0),
-    ("CALÇA JEANS INDUSTRIAL TAMANHO 56", 0),
-    ("CALÇA JEANS INDUSTRIAL TAMANHO 58", 0),
-    ("CAMISA DE UNIFORME AZUL TAMANHO P", 0),
-    ("CAMISA DE UNIFORME AZUL TAMANHO M", 0),
-    ("CAMISA DE UNIFORME AZUL TAMANHO G", 0),
-    ("CAMISA DE UNIFORME AZUL TAMANHO GG", 0),
-    ("CAMISA DE UNIFORME AZUL TAMANHO XG", 0),
-    ("CAMISA DE UNIFORME AZUL TAMANHO XGG", 0),
-    ("CANTONEIRA PLASTICA PARA FITA 19MM (PACOTE 1000)", 0),
-    ("CAPA DE CHUVA", 0),
-    ("CAPACETE AMARELO COM CARNEIRA", 0),
-    ("CAPACETE AZUL COM CARNEIRA", 0),
-    ("CAPACETE BRANCO COM CARNEIRA", 0),
-    ("CAPACETE VERDE COM CARNEIRA", 0),
-    ("CARNEIRA", 0),
-    ("CINTA - SLING CS60Q 5 TON. VERT. / 4 METROS F.S. 5:1 CINZA", 0),
-    ("CINTA - SLING CS60Q 5 TON. VERT. / 4 METROS F.S. 5:1 VERDE", 0),
-    ("CREME DE PROTECAO PARA MAOS", 0),
-    ("DESENGRIPANTE", 0),
-    ("DISCO DE CORTE 4\"1/2", 0),
-    ("DISCO DE CORTE 7\"", 0),
-    ("DISCO DE CORTE 9\"", 0),
-    ("DISCO DE DESBASTE 7\"", 0),
-    ("DISCO DE DESBASTE 9\"", 0),
-    ("ELETRODO 2,50 / 6013 – 20KG", 0),
-    ("GALOCHA 35", 0),
-    ("GALOCHA 36", 0),
-    ("GALOCHA 37", 0),
-    ("GALOCHA 38", 0),
-    ("GALOCHA 39", 0),
-    ("GALOCHA 40", 0),
-    ("JUGULAR", 0),
-    ("LENTE DE SOLDA ESCURA NUMERO 10", 0),
-    ("LENTE TRANSPARENTE", 0),
-    ("LONA PARA CARREGAMENTO", 0),
-    ("LUVA ALG/NITRILICA PARA SETUP (CA 42426)", 0),
-    ("LUVA DE RASPA CANO LONGO (CA 6314)", 0),
-    ("LUVA DE VAQUETA MISTA", 0),
-    ("LUVA PANO PIGMENTADA (CA 31911)", 0),
-    ("MANGOTE - REF: 4181.50", 0),
-    ("MARCADOR INDUSTRIAL (AMARELO)", 0),
-    ("MASCARA DE SOLDA", 0),
-    ("MASCARA PFF2-S", 0),
-    ("OCULOS DE PROTEÇÃO", 0),
-    ("OLEO SS PROT 50", 0),
-    ("PERNEIRA", 0),
-    ("PROTETOR AURICULAR CONCHA", 0),
-    ("PROTETOR AURICULAR SILICONE 3M (CA 5745)", 0),
-    ("SABAO EM PO AMARELO GALO BARRICA 40 KG", 0),
-    ("TRENA 5 METROS STARRET", 0),
-    ("TRENA 8 METROS STARRET", 0),
-]
-        for index, (item, estoque) in enumerate(itens):
+    def inserir_registros_manual(self, itens):
+        
+        for index, (cod, item, estoque) in enumerate(itens):
 
-            valores = ("", item.upper(), estoque)
+            valores = (cod, item.upper(), estoque)
 
             if index % 2 != 0:
                 if estoque < 10:
