@@ -5,6 +5,7 @@ from PIL import Image
 from pathlib import Path
 from Interface.Estoque import Estoque
 from Interface.Impressora import Impressora
+from Interface.TI import TI
 from tkinter import messagebox as msg
 from Login.usuario import user_autoridade
 
@@ -13,32 +14,32 @@ class Area_Trabalho(CTkFrame):
 
     lista_icones : dict = {
         "Estoque": {
-            "pos_x": .15,
+            "pos_x": .45,
             "pos_y": .8,
             "relwidth" : .1,
             "relheight" : .1,
-            "cor" : "#000000"
+            "cor" : "#06090E"
         },
         "Sair" : {
-            "pos_x": .005,
+            "pos_x": .725,
             "pos_y": .8,
-            "relwidth" : .1,
+            "relwidth" : .05,
             "relheight" : .1,
-            "cor" : "#000000"
+            "cor" : "#06090E"
         },
         "Impressora" : {
-            "pos_x": .25,
+            "pos_x": .55,
             "pos_y": .8,
             "relwidth" : .1,
             "relheight" : .1,
-            "cor" : "#000000"
+            "cor" : "#06090E"
         },
         "TI" : {
             "pos_x": .35,
             "pos_y": .8,
             "relwidth" : .1,
             "relheight" : .1,
-            "cor" : "#000000"
+            "cor" : "#06090E"
         }
     }
 
@@ -110,11 +111,13 @@ class Area_Trabalho(CTkFrame):
             imagem_B : CTkButton = CTkButton(self, image=imagem, text="", fg_color=cor,
                                            corner_radius=0, bg_color=cor, hover_color=cor,
                                            command=lambda: print())
+    
 
-
-            imagem_B.bind("<Enter>", lambda e, botao=imagem_B: self.enter_mouse(e, botao))
-            imagem_B.bind("<Leave>", lambda e, botao=imagem_B: self.leave_mouse(e, botao))
             imagem_B.bind("<Button-1>", lambda e, programa=icone: self.double_click(e, programa))
+            if icone != "Sair":
+                imagem_B.bind("<Enter>", lambda e, botao=imagem_B: self.enter_mouse(e, botao))
+                imagem_B.bind("<Leave>", lambda e, botao=imagem_B: self.leave_mouse(e, botao))
+            
             
 
             
@@ -133,7 +136,8 @@ class Area_Trabalho(CTkFrame):
             case "Impressora":
                 janela_Impressora : Impressora = Impressora(self.master)
             case "TI":
-                msg.showinfo("Não encontrado", "disponível em breve!", parent=self.master)
+                #return
+                janela_TI : TI = TI(self.master)
             case "Sair":
                 self.fechar()
 

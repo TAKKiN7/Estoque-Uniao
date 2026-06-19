@@ -10,7 +10,7 @@ from Login.usuario import user_autoridade
 
 class Login(CTk):
     def __init__(self):
-        super().__init__(fg_color="#E6EBF4")
+        super().__init__(fg_color="#06090E")
         self.config()
         self.layout()
         self.mainloop()
@@ -21,8 +21,8 @@ class Login(CTk):
     def config(self):
         self.title("Aços União")
         self.iconbitmap("Imagens/01.ico")
-        largura_janela = 250
-        altura_janela = 400
+        largura_janela = 600
+        altura_janela = 350
         
         self.minsize(largura_janela,altura_janela)
         self.maxsize(largura_janela,altura_janela)
@@ -53,54 +53,54 @@ class Login(CTk):
     def layout(self):
         self.user_E = CTkEntry(
             self,
-            placeholder_text="👤 Nome de usuário",
-            font=("Itim", 14),
+            placeholder_text="👤  Usuário",
+            font=("Itim", 12),
             height=40,
             corner_radius=8,
             border_width=3,
-            border_color="#2563EB",
-            fg_color="#FFFFFF",
-            bg_color="#E6EBF4",
-            text_color="#1E293B"
+            border_color="#000000",
+            fg_color="#06090E",
+            bg_color="#06090E",
+            text_color="WHITE"
         )
         self.user_E.bind("<Return>", lambda e: self.tab(e))
         #self.after(200, lambda: self.user_E.focus_set())
 
         self.pass_E = CTkEntry(
             self,
-            placeholder_text="🔒 Senha de acesso",
+            placeholder_text="🔒  Senha",
             show="*",
-            font=("Itim", 14),
+            font=("Itim", 12),
             height=40,
             corner_radius=8,
             border_width=3,
-            border_color="#2563EB",
-            fg_color="#FFFFFF",
-            bg_color="#E6EBF4",
-            text_color="#1E293B"
+            border_color="#000000",
+            fg_color="#06090E",
+            bg_color="#06090E",
+            text_color="#ffffff"
         )
 
         self.login_B = CTkButton(
             self,
-            text="🔑 Entrar",
+            text="Entrar",
             command=self.entrar,
             width=140,
             height=40,
             corner_radius=8,
-            fg_color="#2563EB",
-            hover_color="#1D4ED8",
+            fg_color="#00115E",
+            hover_color="#11005E",
             text_color="white",
             font=("Itim", 14, "bold"),
             border_width=2,
-            border_color="#1E40AF"
+            border_color="#000000"
         )
 
         self.pass_E.bind("<Return>", lambda e: self.entrar(e))
 
 
-        self.user_E.place(relx=.2, rely=.5, relwidth=.6)
-        self.pass_E.place(relx=.2, rely=.65  , relwidth=.6)
-        self.login_B.place(relx=.2, rely=.85, relwidth=.6)
+        self.user_E.place(relx=.32, rely=.51, relwidth=.36, relheight=.09)
+        self.pass_E.place(relx=.32, rely=.605  , relwidth=.36, relheight=.09)
+        self.login_B.place(relx=.32, rely=.7, relwidth=.36, relheight=.09)
     
 
     def tab(self, e):

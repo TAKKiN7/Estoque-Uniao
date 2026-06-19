@@ -72,5 +72,23 @@ class Impressora_Database:
                 conn.commit()
         finally:
             conn.close()
+
+    
+    def remover_impressora(self, codigo, master):
+        conn = self.conn(master=master)
+        if not conn:
+            return None
+        try:
+            with conn:
+                cur = conn.cursor()
+                cur.execute("DELETE FROM impressoras " \
+                "WHERE id = %s", (codigo, ))
+                conn.commit()
+                return "Impressora removida com sucesso"
+        except:
+            return "Não foi possível remover a impressora"
+        finally:
+            conn.close()
+
         
 impressora_db : Impressora_Database = Impressora_Database()

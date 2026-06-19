@@ -2,13 +2,14 @@ from customtkinter import CTkFrame, CTkEntry, CTkLabel
 from Interface.Menu_s.barra_tarefas import criar_menu
 from tkinter import Menu
 import time
+from datetime import datetime
 from Login.usuario import user_autoridade
 
 
 class Barra_Tarefas(CTkFrame):
     def __init__(self, master):
         self.master = master
-        super().__init__(self.master, fg_color="#000", corner_radius=0, border_width=2, border_color="BLACK")
+        super().__init__(self.master, fg_color="#DC4E03", corner_radius=0, border_width=2, border_color="BLACK")
         self.config()
 
 
@@ -17,17 +18,21 @@ class Barra_Tarefas(CTkFrame):
 
 
         usuario : str = user_autoridade.user
-        usuario_L : CTkLabel = CTkLabel(self, text=f"Usuário: {usuario}", bg_color="BLACK", fg_color="BLACK",
+        usuario_L : CTkLabel = CTkLabel(self, text=f"Usuário: {usuario}", bg_color="#DC4E03", fg_color="#DC4E03",
                                         text_color="WHITE", font=("Segoe UI", 14, "bold"))
-        usuario_L.place(relx=0, rely=0)
+        usuario_L.place(relx=0.004, rely=0.04)
 
         pesquisar_E : CTkEntry = CTkEntry(self, placeholder_text="Pesquisar...", corner_radius=0, fg_color="WHITE",
                                           border_color="BLACK", border_width=2)
         #pesquisar_E.place(relx=0.04, rely=0, relwidth=.2, relheight=1)
 
+        data = datetime.now().strftime("%d/%m/%Y")
         hora = time.strftime("%H:%M:%S")
-        self.hora_L : CTkLabel = CTkLabel(self, text=hora,corner_radius=0, text_color="WHITE")
-        self.hora_L.place(relx=.95, rely=.4, relheight=.25)
+
+        data_hora = f"{data} - {hora}"
+
+        self.hora_L : CTkLabel = CTkLabel(self, text=data_hora,corner_radius=0, text_color="WHITE")
+        self.hora_L.place(relx=.9, rely=.4, relheight=.25)
 
         self.after(1000, self.atualizar_hora)
 
@@ -40,7 +45,10 @@ class Barra_Tarefas(CTkFrame):
 
 
     def atualizar_hora(self):
+        data = datetime.now().strftime("%d/%m/%Y")
         hora = time.strftime("%H:%M:%S")
-        self.hora_L.configure(text=hora)
+
+        data_hora = f"{data} - {hora}"
+        self.hora_L.configure(text=data_hora)
 
         self.after(1000, self.atualizar_hora)

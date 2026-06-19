@@ -154,7 +154,8 @@ class Adicionar(CTkToplevel):
             return
         if not ip:
             msg.showerror("Erro", "Campo *IP* é obrigatório!", parent=self.master)
-
+            return
+        
         if local == "":
             local = "Sem informação"
         

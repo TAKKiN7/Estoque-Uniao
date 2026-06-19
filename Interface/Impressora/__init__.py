@@ -87,7 +87,7 @@ class Impressora(CTkToplevel):
         )
 
         #editar_B.place(relx=.34, relwidth=.12, rely=.955, relheight=.04)
-        #remover_B.place(relx=.18, relwidth=.12, rely=.955, relheight=.04)
+        remover_B.place(relx=.18, relwidth=.12, rely=.955, relheight=.04)
         adicionar_B.place(relx=.04, relwidth=.12, rely=.955, relheight=.04)
 
 
@@ -154,10 +154,10 @@ class Impressora(CTkToplevel):
 
         
 
-        res = database.remover_produto(codigo, master=self)
+        res = impressora_db.remover_impressora(codigo, master=self)
         print(res)
 
-        if "não" in res:
+        if "não" in res.lower():
             msg.showerror("Falha", res, parent=self)
             return
         msg.showinfo("Concluído", res, parent=self)
@@ -195,22 +195,17 @@ class Tabela(Treeview):
 
         self.tag_configure(
             "linha_1",
-            background="#aaaaaa"
+            background="#1E293B"
         )
 
         self.tag_configure(
             "linha_2",
-            background="#999999"
+            background="#2A384E"
         )
     
         self.tag_configure(
             "tonner_baixo",
-            foreground="RED"
-        )
-        
-        self.tag_configure(
-            "tonner_otimo",
-            foreground="GREEN"
+            background="RED"
         )
 
 
@@ -219,7 +214,7 @@ class Tabela(Treeview):
             font=("Segoe UI", 11),
             rowheight=32,
             background="#FFFFFF",
-            fieldbackground="#FFFFFF",
+            fieldbackground="#1E293B",
             foreground="#1E293B",
             borderwidth=0
         )
@@ -252,6 +247,14 @@ class Tabela(Treeview):
     def inserir_registros(self):
         registros : list = impressora_db.listar_registros()
 
+
+        print(registros)
+
+        if registros == "" "Nenhum registro encontrado":
+            valores = ("0", "Nenhuma impressora cadastrada", "0", "0", "0")
+            self.insert("", "end", values=valores)
+            return "Nenhuma impresssora cadastrada."
+
         for index, registro in enumerate(registros):
 
             valores = (registro[0], registro[1], registro[2], registro[3], registro[4])
@@ -260,12 +263,12 @@ class Tabela(Treeview):
 
             if index % 2 != 0:
                 if quantidade_tonner < 10:
-                    self.insert("", "end", values=valores, tags=("linha_1","tonner_baixo", ))
+                    self.insert("", "end", values=valores, tags=("tonner_baixo", ))
                 else:
                     self.insert("", "end", values=valores, tags=("linha_1", ))
             else:
                 if quantidade_tonner < 10:
-                    self.insert("", "end", values=valores, tags=("linha_2", "tonner_otimo",))
+                    self.insert("", "end", values=valores, tags=("tonner_baixo",))
                 else:
                     self.insert("", "end", values=valores, tags=("linha_2",))
 

@@ -10,7 +10,7 @@ from Login.usuario import user_autoridade
 
 
 
-class Estoque(CTkToplevel):
+class TI(CTkToplevel):
     def __init__(self, master):
         self.permissao = user_autoridade.autoridade
         print(self.permissao)
@@ -21,7 +21,7 @@ class Estoque(CTkToplevel):
 
 
     def config(self):
-        self.title("Estoque")
+        self.title("TI")
         self.grab_set()
         self.after(200,lambda: self.iconbitmap("Imagens/01.ico"))
         largura_janela = 900
@@ -46,11 +46,11 @@ class Estoque(CTkToplevel):
         #tabela.pack(fill="both", expand=True)
         self.tabela.place(relx=0, rely=0.05, relwidth=1, relheight=.9)
         if self.permissao in ("Admin"):
-            self.menu_admin()
+            #self.menu_admin()
             self.tabela.bind("<Double-Button-1>", lambda e: self.entrada(e))
         else:
             self.tabela.bind("<Double-Button-1>", lambda e: self.saida(e))
-        self.menu()
+        #self.menu()
 
     def menu_admin(self): 
 
@@ -272,34 +272,33 @@ class Tabela(Treeview):
         self.style = Style()
         self.style.theme_use("clam")
         self.config()
-        self.layout(pesquisa)
+        #self.layout(pesquisa)
         
     def config(self):
-        self["columns"] = ("codigo", "item", "estoque")
+        self["columns"] = ("codigo", "produto", "modelo", "estoque")
 
         self.column("codigo", width=70, stretch=False)
         self.column("estoque", width=90,stretch=False, anchor="center")
 
         self.heading("codigo", text="Código")
-        self.heading("item", text="Item")
+        self.heading("produto", text="Produto")
+        self.heading("modelo", text="Modelo")
         self.heading("estoque", text="Estoque")
-
-
 
 
         self.tag_configure(
             "linha_1",
-            background="#1E293B"
+            background="#aaaaaa"
         )
 
         self.tag_configure(
             "linha_2",
-            background="#2A384E"
+            background="#999999"
         )
     
         self.tag_configure(
             "estoque_baixo",
-            background="RED"
+            foreground="RED"
         )
 
 
@@ -309,7 +308,7 @@ class Tabela(Treeview):
             rowheight=32,
             background="#FFFFFF",
             fieldbackground="#1E293B",
-            foreground="WHITE",
+            foreground="#1E293B",
             borderwidth=0
         )
         # self.style.configure(
@@ -357,12 +356,12 @@ class Tabela(Treeview):
 
             if index % 2 != 0:
                 if estoque < 10:
-                    self.insert("", "end", values=valores, tags=("estoque_baixo",))
+                    self.insert("", "end", values=valores, tags=("linha_1", "estoque_baixo"))
                 else:
                     self.insert("", "end", values=valores, tags=("linha_1",))
             else:
                 if estoque < 10:
-                    self.insert("", "end", values=valores, tags=("estoque_baixo",))
+                    self.insert("", "end", values=valores, tags=("linha_2", "estoque_baixo"))
                 else:
                     self.insert("", "end", values=valores, tags=("linha_2",))
 
@@ -380,11 +379,11 @@ class Tabela(Treeview):
 
             if index % 2 != 0:
                 if estoque < 10:
-                    self.insert("", "end", values=valores, tags=("estoque_baixo", ))
+                    self.insert("", "end", values=valores, tags=("linha_1","estoque_baixo", ))
                 else:
                     self.insert("", "end", values=valores, tags=("linha_1", ))
             else:
                 if estoque < 10:
-                    self.insert("", "end", values=valores, tags=("estoque_baixo",))
+                    self.insert("", "end", values=valores, tags=("linha_2", "estoque_baixo",))
                 else:
                     self.insert("", "end", values=valores, tags=("linha_2",))
