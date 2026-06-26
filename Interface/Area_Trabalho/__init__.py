@@ -22,7 +22,7 @@ class Area_Trabalho(CTkFrame):
             "cor" : "#06090E"
         },
         "Sair" : {
-            "pos_x": .725,
+            "pos_x": .85,
             "pos_y": .8,
             "relwidth" : .05,
             "relheight" : .1,
@@ -48,7 +48,15 @@ class Area_Trabalho(CTkFrame):
             "relwidth" : .1,
             "relheight" : .1,
             "cor" : "#06090E"
+        },
+        "CTE" : {
+            "pos_x": .65,
+            "pos_y": .8,
+            "relwidth" : .1,
+            "relheight" : .1,
+            "cor" : "#06090E"
         }
+
 
     }
 
@@ -61,7 +69,7 @@ class Area_Trabalho(CTkFrame):
             "cor" : "#06090E"
         },
         "Sair" : {
-            "pos_x": .725,
+            "pos_x": .85,
             "pos_y": .8,
             "relwidth" : .05,
             "relheight" : .1,
@@ -85,7 +93,7 @@ class Area_Trabalho(CTkFrame):
             "cor" : "#06090E"
         },
         "Sair" : {
-            "pos_x": .725,
+            "pos_x": .85,
             "pos_y": .8,
             "relwidth" : .05,
             "relheight" : .1,
@@ -198,6 +206,8 @@ class Area_Trabalho(CTkFrame):
                 self.fechar()
             case "Bobina":
                 janela_Bobina : Bobina = Bobina()
+            case "CTE":
+                msg.showinfo("Não encontrado", "Disponível em breve", parent=self.master)
 
 
     def tecla_pressionada(self, event):
