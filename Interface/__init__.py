@@ -10,6 +10,7 @@ class App(CTk):
         super().__init__()
         self.protocol("WM_DELETE_WINDOW", lambda: print())
         self.logo()
+        self.after(200, self.focus_set)
         self.mainloop()
 
 

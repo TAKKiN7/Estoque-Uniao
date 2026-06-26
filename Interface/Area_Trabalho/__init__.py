@@ -5,6 +5,7 @@ from PIL import Image
 from pathlib import Path
 from Interface.Estoque import Estoque
 from Interface.Impressora import Impressora
+from Interface.Bobina import Bobina
 from Interface.TI import TI
 from tkinter import messagebox as msg
 from Login.usuario import user_autoridade
@@ -12,9 +13,9 @@ from Login.usuario import user_autoridade
 class Area_Trabalho(CTkFrame):
     #lista_icones : list = ["Estoque", "Impressora"]
 
-    lista_icones : dict = {
+    lista_icones_tk : dict = {
         "Estoque": {
-            "pos_x": .45,
+            "pos_x": .35,
             "pos_y": .8,
             "relwidth" : .1,
             "relheight" : .1,
@@ -28,16 +29,65 @@ class Area_Trabalho(CTkFrame):
             "cor" : "#06090E"
         },
         "Impressora" : {
-            "pos_x": .55,
+            "pos_x": .45,
             "pos_y": .8,
             "relwidth" : .1,
             "relheight" : .1,
             "cor" : "#06090E"
         },
         "TI" : {
+            "pos_x": .25,
+            "pos_y": .8,
+            "relwidth" : .1,
+            "relheight" : .1,
+            "cor" : "#06090E"
+        },
+        "Bobina" : {
+            "pos_x": .55,
+            "pos_y": .8,
+            "relwidth" : .1,
+            "relheight" : .1,
+            "cor" : "#06090E"
+        }
+
+    }
+
+    lista_icones_jl : dict = {
+        "Estoque": {
             "pos_x": .35,
             "pos_y": .8,
             "relwidth" : .1,
+            "relheight" : .1,
+            "cor" : "#06090E"
+        },
+        "Sair" : {
+            "pos_x": .725,
+            "pos_y": .8,
+            "relwidth" : .05,
+            "relheight" : .1,
+            "cor" : "#06090E"
+        },
+        "TI" : {
+            "pos_x": .25,
+            "pos_y": .8,
+            "relwidth" : .1,
+            "relheight" : .1,
+            "cor" : "#06090E"
+        }
+    }
+
+    lista_icones_almo : dict = {
+        "Estoque": {
+            "pos_x": .25,
+            "pos_y": .8,
+            "relwidth" : .1,
+            "relheight" : .1,
+            "cor" : "#06090E"
+        },
+        "Sair" : {
+            "pos_x": .725,
+            "pos_y": .8,
+            "relwidth" : .05,
             "relheight" : .1,
             "cor" : "#06090E"
         }
@@ -75,6 +125,9 @@ class Area_Trabalho(CTkFrame):
 
     def config(self):
         
+        self.bind("<Key>", self.tecla_pressionada)
+        self.after(200, self.focus_set)
+
         self.place(relx=0, rely=0, relwidth=1, relheight=.95)
 
     
@@ -86,15 +139,18 @@ class Area_Trabalho(CTkFrame):
 
 
     def icones(self):
-        for icone in self.lista_icones:
-            if user_autoridade.autoridade.lower() == "default":
-                if icone not in ("Sair", "Estoque"):
-                    continue
+        if user_autoridade.user == "TK-TI":
+            lista_icones = self.lista_icones_tk
+        elif user_autoridade.user == "JULIANA-RH":
+            lista_icones = self.lista_icones_jl
+        elif user_autoridade.user == "ALMAXARIFADO":
+            lista_icones = self.lista_icones_almo
 
-            pos_x = self.lista_icones.get(icone).get("pos_x")
-            pos_y = self.lista_icones.get(icone).get("pos_y")
-            relwidth= self.lista_icones.get(icone).get("relwidth")
-            relheight= self.lista_icones.get(icone).get("relheight")
+        for icone in lista_icones:
+            pos_x = lista_icones.get(icone).get("pos_x")
+            pos_y = lista_icones.get(icone).get("pos_y")
+            relwidth= lista_icones.get(icone).get("relwidth")
+            relheight= lista_icones.get(icone).get("relheight")
 
             texto_L : CTkLabel = CTkLabel(self, text=icone , text_color="BLACK", font=("Itim", 14), fg_color="#F4F4F6",
                                           corner_radius=0)
@@ -105,7 +161,7 @@ class Area_Trabalho(CTkFrame):
             image_path : Path = Path.cwd() / f"Imagens/Icones/{icone}.png"
             image : Image = Image.open(image_path)
 
-            cor = self.lista_icones.get(icone).get("cor")
+            cor = lista_icones.get(icone).get("cor")
 
             imagem : CTkImage = CTkImage(light_image=image, dark_image=image, size=(60, 60))
             imagem_B : CTkButton = CTkButton(self, image=imagem, text="", fg_color=cor,
@@ -140,6 +196,14 @@ class Area_Trabalho(CTkFrame):
                 janela_TI : TI = TI(self.master)
             case "Sair":
                 self.fechar()
+            case "Bobina":
+                janela_Bobina : Bobina = Bobina()
+
+
+    def tecla_pressionada(self, event):
+        print("Tecla:", event.keysym)
+        print("Caractere:", event.char)
+        print("Código:", event.keycode)
 
     
     def enter_mouse(self, e, widget : CTkButton):
