@@ -3,7 +3,7 @@ from time import sleep
 from keyboard import wait, is_pressed
 from pyperclip import copy
 import mouse
-from tkinter import messagebox as msg
+
 
 
 
@@ -32,7 +32,7 @@ def wait_enter():
 
 
 
-def gerdau_start(nota : str, lote : str, peso: str):
+def usiminas_start(nota : str, lote : str, peso: str):
     print(f"""Lote: {lote}
 peso: {peso}""")
     #print("Pressione Mouse_4 para iniciar")
@@ -51,7 +51,7 @@ peso: {peso}""")
     pause()
     click(x=530, y=293)
     pause(2)
-    write("916")
+    write("1854")
     click(x=792, y=523)
     pause()
 
@@ -84,7 +84,7 @@ peso: {peso}""")
     click(x=606, y=364)
     enter__()
     pause()
-    write("916")
+    write("1854")
     pause()
     click(x=257, y=693)
     pause()
@@ -125,16 +125,18 @@ peso: {peso}""")
     for l in peso:
         write(l)
     enter__(1)
+
     moveTo(x=909, y=580)
+
     res = wait_enter()
     if not res:
         return
     click(x=909, y=580)
+
     res = wait_enter()
     if not res:
         return
     pause()
-
 
     
     click(x=328, y=415)
@@ -184,16 +186,17 @@ peso: {peso}""")
     
     res = wait_enter()
     if not res:
-        return
-    
-    enter__(6)
+        print("Nessa caso a nota possui titulo anteceipando, certo?")
+        pass
+    else:
+        enter__(6)
 
-    write("NFe")
-    enter__(3)
-    write("301")
-    enter__(1)
-    write("3505")
-    press("tab")
+        write("NFe")
+        enter__(3)
+        write("301")
+        enter__(1)
+        write("3505")
+        press("tab")
 
     
 
@@ -256,59 +259,12 @@ peso: {peso}""")
     for c in range(4):
         press("esc")
 
-   
 
 
 
 if __name__ == "__main__":
-    wait_enter()
-    click(x=40, y=75)
-    pause(.5)
-    click(x=153, y=380)
-    pause(1)
-    click(x=83, y=31)
-    click(x=93, y=54)
-    pause()
-    click(x=518, y=79)
-    pause()
-    click(x=640, y=395)
-    enter__()
-    pause()
-    click(x=796, y=480)
-    pause()
-    moveTo(x=1334, y=157)
-    pause(1)
-
-
-    click(x=610, y=199)
-    lote = "260512613700"
-    press("space")
-    for n in lote:
-        write(n)
-    
-    enter__(3)
-    pause()
-    click(x=971, y=674)
-    pause()
-    num = "15"
-    for  n in num:
-        write(n)
-    enter__()
-
-
-    print("confirme a classificação")
-    res = wait_enter()
-    write("eustaquio")
-    press("tab")
-    write("eustaqui")
-    press("tab")
-    press("enter")
-    write(".")
-    press("tab")
-    enter__(2)
-
-    pause(1)
-    for c in range(4):
-        press("esc")
-
-    
+    nota = "7522941"
+    lote = "123456789"
+    peso = "123456"
+ 
+    usiminas_start(nota, lote, peso)

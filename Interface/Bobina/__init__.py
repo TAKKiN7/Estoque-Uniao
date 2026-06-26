@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter import messagebox as msg
 from Interface.Bobina.Functions.nota_entrada_gerdau import gerdau_start
 from Interface.Bobina.Functions.nota_entrada_aperam import aperam_start
+from Interface.Bobina.Functions.nota_entrada_usiminas import usiminas_start
 from pyautogui import press
 
 
@@ -58,11 +59,14 @@ class Bobina(Tk):
             font=("Segoe UI", 14, "bold"),
             relief="flat",
             cursor="hand2",
-            command=self.em_breve
+            command=self.janela_usiminas
         ).pack(fill="x", padx=30, pady=10, ipady=12)
 
     def em_breve(self):
         msg.showinfo("Não encontrado","Disponível em breve", parent=self)
+
+    def finalizado(self):
+        msg.showinfo("Finalizado", "RETIRE A ETIQUETA, CARIMBE E DATE A NOTA", parent=self)
 
     def tab(self, e=None):
         press("tab")
@@ -122,6 +126,8 @@ class Bobina(Tk):
             #top.destroy()
 
             gerdau_start(numero_valor, lote_valor, peso_valor)
+            self.finalizado()
+            
 
         btn = Button(
             top,
@@ -192,6 +198,7 @@ class Bobina(Tk):
             top.destroy()
 
             aperam_start(nota_num, qtd_lotes)
+            self.finalizado()
 
         qtd.bind("<Return>", lambda event: confirmar())
 
@@ -204,3 +211,71 @@ class Bobina(Tk):
             command=confirmar
         ).pack(pady=20)
 
+    def janela_usiminas(self):
+
+        top = Toplevel(self)
+        top.title("USIMINAS")
+        largura = 350
+        altura = 220
+
+        self.update_idletasks()
+
+        x = self.winfo_x() + (self.winfo_width() - largura) // 2
+        y = self.winfo_y() + (self.winfo_height() - altura) // 2
+
+        top.geometry(f"{largura}x{altura}+{x}+{y}")
+        top.configure(bg="#1E293B")
+        top.grab_set()
+
+
+        Label(
+            top,
+            text="Dados da Nota",
+            font=("Segoe UI", 14, "bold"),
+            bg="#1E293B",
+            fg="white"
+        ).pack(pady=10)
+
+        Label(top, text="Número", bg="#1E293B",
+              fg="white").pack(anchor="w", padx=20)
+
+        numero = Entry(top, font=("Segoe UI", 11))
+        numero.bind("<Return>", self.tab)
+        numero.pack(fill="x", padx=20)
+
+
+        Label(top, text="Lote", bg="#1E293B",
+              fg="white").pack(anchor="w", padx=20)
+
+        lote = Entry(top, font=("Segoe UI", 11))
+        lote.bind("<Return>", self.tab)
+        lote.pack(fill="x", padx=20)
+
+        Label(top, text="Peso", bg="#1E293B",
+              fg="white").pack(anchor="w", padx=20, pady=(10, 0))
+
+        peso = Entry(top, font=("Segoe UI", 11))
+        self.after(200, numero.focus_set)
+        peso.pack(fill="x", padx=20)
+
+        def confirmar(e=None):
+            numero_valor = numero.get()
+            lote_valor = lote.get()
+            peso_valor = peso.get()
+
+            #top.destroy()
+
+            usiminas_start(numero_valor, lote_valor, peso_valor)
+            self.finalizado()
+            
+
+        btn = Button(
+            top,
+            text="CONFIRMAR",
+            bg="#DC2626",
+            fg="white",
+            font=("Segoe UI", 11, "bold"),
+            command=confirmar
+        ).pack(pady=20)
+
+        peso.bind("<Return>", lambda e: confirmar(e))

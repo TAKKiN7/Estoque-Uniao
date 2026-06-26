@@ -171,7 +171,7 @@ def aperam_start(nota : str, lotes : str):
 
 if __name__ == "__main__":
     numero_nota = str(input("Digite o número da nota: "))
-    lotes = int(input("Quantidade de lotes: "))
+    lotes = str(input("Quantidade de lotes: "))
     
     aperam_start(numero_nota, lotes)
 
